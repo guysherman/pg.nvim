@@ -30,7 +30,6 @@ end
 
 local function load_file(path, settings)
   local file_text = load_encrypted_file(path, settings)
-  print('decrypt', file_text)
   local status, connection_data = pcall(function()
     return json.decode(file_text)
   end)

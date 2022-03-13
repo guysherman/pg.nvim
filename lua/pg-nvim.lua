@@ -59,15 +59,9 @@ local function connect_buffer()
       close = { "<Esc>", "<C-c>" },
       submit = { "<CR>", "<Space>" },
     },
-    on_close = function()
-      print("CLOSED")
-    end,
     on_submit = function(item)
       local result_split, buffer
       result_split = get_split()
-
-      print('result_split', vim.inspect(result_split))
-
       -- If we haven't created the split, create it
       -- otherwise just create a new buffer, and pop it
       -- in the split's window
@@ -92,8 +86,6 @@ local function connect_buffer()
         buffer = buffer,
         tunnel = tunnel,
       }
-
-      print("SUBMITTED", vim.inspect(item))
     end,
   })
 
