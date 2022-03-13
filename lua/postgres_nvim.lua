@@ -3,6 +3,7 @@ local Menu = require('nui.menu')
 local event = require("nui.utils.autocmd").event
 local get_connection_files = require('./get_connection_files')
 local create_result_buffer = require('./create_result_buffer')
+local psql_command = require('./psql_command')
 local psql_tunnel = require('./psql_tunnel')
 
 local settings = {
@@ -81,7 +82,16 @@ local function print_connection_map()
   print('Connection Map', vim.inspect(connection_map))
 end
 
+local function run_query(query)
+  local current_buffer = vim.api.nvim_get_current_buf()
+  local connection_data = connection_map[current_buffer]
+  local output = psql_command(connection_data.connection, query)
+  vim.api.nvim_buf_set_lines(connection_data.split.bufnr, 0, -1, false, output)
+  vim.api.nvim_set_current_win(connection_data.split.winid)
+end
+
 return {
   ConnectBuffer = connect_buffer,
-  PrintConnMap = print_connection_map
+  PrintConnMap = print_connection_map,
+  RunQuery = run_query
 }

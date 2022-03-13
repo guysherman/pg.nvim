@@ -1,33 +1,52 @@
 local Job = require('plenary.job')
 
-  --local connection_settings = connection_file.load(path)
+local function psql_command(connection, query)
+  local host, port
 
-  --local env_vars = {}
-  --table.insert(env_vars, string.format('PGPASSWORD=%s', connection_settings.password))
+  if connection.tunnel then
+    host = 'localhost'
+    port = connection.tunnelPort
+  else
+    host = connection.host
+    port = connection.port
+  end
 
-  --job = Job:new {
-    ----command = '/usr/bin/psql',
-    ----args = { '-h', 'localhost', '-U', connection_settings.username, '-c', '\\dn' },
-    ----env = env_vars,
+  local job = Job:new {
+    command = '/usr/bin/psql',
+    args = { 
+      '-h',
+      host,
+      '-p',
+      port,
+      '-d',
+      connection.database,
+      '-U',
+      connection.username,
+      '-c',
+      query
+    },
+    env = {
+      ['PGPASSWORD'] = connection.password
+    },
 
-    --on_stdout = function(err, data)
-      --if (err) then
-        --print('error', err)
-      --else
-        --print(data)
-      --end
-    --end,
-    --on_stderr = function(_, data)
-      --if (err) then
-        --print('error', err)
-      --else
-        --print(data)
-      --end
-    --end,
-  --}
-  --job:start()
-  --job:send('Foo\n')
-  --job:send('Bar\n')
-  --job:send('Baz\n')
-  --job:shutdown()
+    on_stdout = function(err, data)
+      if (err) then
+        print('error', err)
+      end
+    end,
+    on_stderr = function(err, data)
+      if (err) then
+        print('error', err)
+      else
+        print(data)
+      end
+    end
+  }
+
+  job:sync(60000)
+  local result = job:result()
+  return result
+end
+
+return psql_command
 
