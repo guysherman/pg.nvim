@@ -3,6 +3,7 @@ local Menu = require('nui.menu')
 local event = require("nui.utils.autocmd").event
 local get_connection_files = require('./get_connection_files')
 local create_result_buffer = require('./create_result_buffer')
+local psql_tunnel = require('./psql_tunnel')
 
 local settings = {
   state_dir = '/home/guy/.local/state/pg.nvim',
@@ -56,10 +57,16 @@ local function connect_buffer()
     end,
     on_submit = function(item)
       local split = create_result_buffer(current_win)
+      local tunnel
+
+      if item.tunnel then
+        tunnel = psql_tunnel(item)
+      end
 
       connection_map[current_buffer] = {
         connection = item,
         split = split,
+        tunnel = tunnel,
       }
 
       print("SUBMITTED", vim.inspect(item))
