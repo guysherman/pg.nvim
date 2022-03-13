@@ -130,5 +130,5 @@ files as follows:
 gpg --encrypt --recipient <my key email address> --output <out file name> <in file name>
 ```
 
-I put the encrypted file in the `~/.local/state/pg.nvim` director and delete the
+I put the encrypted file in the `~/.local/state/pg.nvim` directory and delete the
 plain text file.
