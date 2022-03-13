@@ -62,7 +62,7 @@ Connection files are stored in `$HOME/.local/state/pg.nvim`. They are json files
 }
 ```
 
-When you runn the command `:PGConnectBuffer` the plugin will scan the connection
+When you run the command `:PGConnectBuffer` the plugin will scan the connection
 directory and list the connections you have stored there. Use `j/k` to navigate
 the list, and use `Enter` to select an item.
 
@@ -123,3 +123,12 @@ the user. On my machine I am using a gpg key-pair, and polkit prompts me for the
 passphrase (and then stores it in the system keyring for a while). On mac you
 need to install gpg-tools, rather than just gpg. For Windows I have no idea.
 
+I created a gpg key with: `gpg --full-gen-key`, and then I encrypt my connection
+files as follows:
+
+```
+gpg --encrypt --recipient <my key email address> --output <out file name> <in file name>
+```
+
+I put the encrypted file in the `~/.local/state/pg.nvim` director and delete the
+plain text file.
