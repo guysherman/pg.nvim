@@ -105,8 +105,24 @@ local function run_query(query)
   vim.api.nvim_set_current_win(split.winid)
 end
 
+local function enter_buffer()
+  local current_buffer = vim.api.nvim_get_current_buf()
+
+  local connection = connection_map[current_buffer]
+  if connection then
+    local result_split = get_split()
+    if result_split then
+      vim.schedule(
+      function()
+        vim.api.nvim_win_set_buf(result_split.winid, connection.buffer)
+      end)
+    end
+  end
+end
+
 return {
   ConnectBuffer = connect_buffer,
   PrintConnMap = print_connection_map,
-  RunQuery = run_query
+  RunQuery = run_query,
+  EnterBuffer = enter_buffer,
 }

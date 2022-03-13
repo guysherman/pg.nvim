@@ -6,6 +6,10 @@ if exists('g:loaded_postgres_nvim') | finish | endif
 let s:save_cpo = &cpo " save user coptions
 set cpo&vim " reset them to defaults
 
+function EnterBuffer()
+  lua require 'pg-nvim'.EnterBuffer()
+endfunction
+
 " Run our plugin
 command! PGConnectBuffer lua require 'pg-nvim'.ConnectBuffer()
 command! PGPrintConnMap lua require 'pg-nvim'.PrintConnMap()
@@ -23,6 +27,11 @@ function! s:RunQueryOperator(type)
   let @@ = saved_unnamed_register
 endfunction
 command! PGRunQuery call <SID>RunQueryOperator(visualmode())
+
+augroup PgNvim
+  autocmd!
+  autocmd BufEnter * call EnterBuffer()
+augroup END
 
 " Here is where we restore the coptions
 let &cpo = s:save_cpo " and restore after
