@@ -5,7 +5,8 @@ local get_connection_files = require('./get_connection_files')
 local create_result_buffer = require('./create_result_buffer')
 
 local settings = {
-  state_dir = '/home/guy/.local/state/pg.nvim'
+  state_dir = '/home/guy/.local/state/pg.nvim',
+  gpg_exe = '/usr/bin/gpg',
 }
 
 local connection_map = {}
@@ -33,7 +34,7 @@ local function connect_buffer()
   local current_buffer = vim.api.nvim_get_current_buf()
   local current_win = vim.api.nvim_get_current_win()
 
-  local conn_files = get_connection_files(settings.state_dir)
+  local conn_files = get_connection_files(settings.state_dir, settings)
 
   local menu_lines = {}
   for f in pairs(conn_files) do
