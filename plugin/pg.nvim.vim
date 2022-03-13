@@ -7,8 +7,8 @@ let s:save_cpo = &cpo " save user coptions
 set cpo&vim " reset them to defaults
 
 " Run our plugin
-command! PGConnectBuffer lua require 'postgres_nvim'.ConnectBuffer()
-command! PGPrintConnMap lua require 'postgres_nvim'.PrintConnMap()
+command! PGConnectBuffer lua require 'pg-nvim'.ConnectBuffer()
+command! PGPrintConnMap lua require 'pg-nvim'.PrintConnMap()
 function! s:RunQueryOperator(type)
   let saved_unnamed_register = @@
 
@@ -18,7 +18,7 @@ function! s:RunQueryOperator(type)
     return
   endif
 
-  lua require 'postgres_nvim'.RunQuery(vim.api.nvim_eval('@@'))
+  lua require 'pg-nvim'.RunQuery(vim.api.nvim_eval('@@'))
 
   let @@ = saved_unnamed_register
 endfunction
