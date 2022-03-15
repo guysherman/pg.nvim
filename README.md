@@ -33,6 +33,11 @@ nnoremap <leader>qc :PGConnectBuffer<cr>
 * Execute queries from that buffer and see the results in a companion buffer
 * Can decrypt connection settings before use
 * Supports ssh tunnels
+* When you switch between connected buffers, it updates the result window with the correct result buffer
+* If you close the result window while in a different file (ie a non SQL file), and then navigate back to
+a conneted buffer, it re-opens the result window
+
+![Managing Buffers](/doc/pg-nvim-buffers.gif)
 
 ### Coming eventually...
 * Configure some of the settings
