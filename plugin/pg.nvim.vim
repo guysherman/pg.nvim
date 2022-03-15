@@ -13,6 +13,7 @@ endfunction
 " Run our plugin
 command! PGConnectBuffer lua require 'pg-nvim'.ConnectBuffer()
 command! PGPrintConnMap lua require 'pg-nvim'.PrintConnMap()
+command! PGOnWindowClosed lua require 'pg-nvim'.OnSplitClose()
 function! s:RunQueryOperator(type)
   let saved_unnamed_register = @@
 

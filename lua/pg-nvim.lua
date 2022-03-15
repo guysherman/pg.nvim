@@ -138,4 +138,5 @@ return {
   PrintConnMap = print_connection_map,
   RunQuery = run_query,
   EnterBuffer = enter_buffer,
+  OnSplitClose = on_split_close,
 }
