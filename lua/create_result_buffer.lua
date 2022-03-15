@@ -1,13 +1,8 @@
-local Split = require('nui.split')
-
 local function create_result_buffer(input_win)
-  local split = Split({
-    position = 'bottom',
-    size = '50%'
-  })
-  split:mount()
+  vim.cmd('bel split')
+  local winid = vim.api.nvim_get_current_win()
   vim.api.nvim_set_current_win(input_win)
-  return split
+  return winid
 end
 
 return create_result_buffer

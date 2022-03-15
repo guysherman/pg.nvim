@@ -6,10 +6,20 @@ local create_result_buffer = require('./create_result_buffer')
 local psql_command = require('./psql_command')
 local psql_tunnel = require('./psql_tunnel')
 
-local split
+local state = {
+  split = nil,
+}
 
 local function get_split()
-  return split
+  return state.split
+end
+
+local function set_split(winid)
+  state.split = winid
+end
+
+local function on_split_close()
+  set_split(nil)
 end
 
 local settings = {
@@ -65,15 +75,17 @@ local function connect_buffer()
       -- If we haven't created the split, create it
       -- otherwise just create a new buffer, and pop it
       -- in the split's window
-      if result_split then
-        buffer = vim.api.nvim_create_buf(false, true)
-        result_split:show()
-        vim.api.nvim_win_set_buf(result_split.winid, buffer)
-      else
-        result_split = create_result_buffer(current_win)
-        buffer = result_split.bufnr
-        split = result_split
+
+      if connection_map[current_buffer] then
+        return
       end
+
+      buffer = vim.api.nvim_create_buf(false, true)
+      if result_split == nil then
+        result_split = create_result_buffer(current_win, on_split_close)
+        set_split(result_split)
+      end
+      vim.api.nvim_win_set_buf(result_split, buffer)
 
       local tunnel
 
@@ -102,21 +114,22 @@ local function run_query(query)
   local connection_data = connection_map[current_buffer]
   local output = psql_command(connection_data.connection, query)
   vim.api.nvim_buf_set_lines(connection_data.buffer, 0, -1, false, output)
-  vim.api.nvim_set_current_win(split.winid)
+  vim.api.nvim_set_current_win(state.split)
 end
 
 local function enter_buffer()
   local current_buffer = vim.api.nvim_get_current_buf()
+  local current_win = vim.api.nvim_get_current_win()
 
   local connection = connection_map[current_buffer]
   if connection then
-    local result_split = get_split()
-    if result_split then
-      vim.schedule(
-      function()
-        vim.api.nvim_win_set_buf(result_split.winid, connection.buffer)
-      end)
+    local rs = get_split()
+    if rs == nil then
+      rs = create_result_buffer(current_win, on_split_close)
+      set_split(rs)
+      print('created a new split')
     end
+    vim.api.nvim_win_set_buf(rs, connection.buffer)
   end
 end
 
