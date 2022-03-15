@@ -8,6 +8,13 @@ works in vim as well).
 
 ![Basic Features of pg.nvim](/doc/pg-nvim-basic.gif)
 
+## Dependencies
+
+* `psql` postgres client. On ubuntu this is in the postgresql-client package. Other distros will vary.
+* `gpg` (if you want to encrypt your connection files) - on mac you want `gpg-suite`, on windows ¯\_(ツ)_/¯
+* `plenary.nvim`
+* `nui.nvim`
+
 ## Installation
 
 I use [vim-plug](https://github.com/junegunn/vim-plug) and my installation looks like this:
