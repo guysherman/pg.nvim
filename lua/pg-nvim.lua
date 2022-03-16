@@ -5,7 +5,7 @@ local get_connection_files = require('./get_connection_files')
 local create_result_buffer = require('./create_result_buffer')
 local psql_command = require('./psql_command')
 local psql_tunnel = require('./psql_tunnel')
-local utils = require('./utils')
+local path = require('plenary.path')
 
 local state = {
   split = nil,
@@ -23,7 +23,7 @@ local function on_split_close()
   set_split(nil)
 end
 
-local local_state_dir = utils.path_join({os.getenv('HOME'), '.local', 'state', 'pg.nvim'}, '/')
+local local_state_dir = path.new(os.getenv('HOME'), '.local', 'state', 'pg.nvim').filename
 local settings = {
   state_dir = local_state_dir,
   gpg_exe = '/usr/bin/gpg',
